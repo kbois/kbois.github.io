@@ -1,0 +1,73 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<polymer-element name="game-service" attributes="cards">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+  </template>
+  <script>
+    (function () {
+      Polymer({
+        cards: [],
+
+        ready: function() {
+          this.cards = [
+            {
+              name: 'toto1',
+              image: './images/doge.png'
+            },
+            {
+              name: 'toto2',
+              image: './images/dinde.jpg'
+            },
+            {
+              name: 'toto3',
+              image: './images/grumpycat.jpg'
+            },
+            {
+              name: 'toto4',
+              image: './images/gamecat.jpg'
+            },
+            {
+              name: 'toto5',
+              image: './images/scaredcat.jpg'
+            },
+            {
+              name: 'toto1',
+              image: './images/doge.png'
+            },
+            {
+              name: 'toto2',
+              image: './images/dinde.jpg'
+            },
+            {
+              name: 'toto3',
+              image: './images/grumpycat.jpg'
+            },
+            {
+              name: 'toto4',
+              image: './images/gamecat.jpg'
+            },
+            {
+              name: 'toto5',
+              image: './images/scaredcat.jpg'
+            },
+          ];
+          this.shuffle(this.cards);
+        },
+        shuffle: function(arrayOfObjects) {
+          for (var i = 0; i < arrayOfObjects.length - 1; i++) {
+              var j = i + Math.floor(Math.random() * (arrayOfObjects.length - i));
+
+              var temp = arrayOfObjects[j];
+              arrayOfObjects[j] = arrayOfObjects[i];
+              arrayOfObjects[i] = temp;
+          }
+        }
+      });
+    })();
+  </script>
+</polymer-element>

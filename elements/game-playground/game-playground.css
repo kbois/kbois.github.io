@@ -1,0 +1,10 @@
+:host {
+  display: block; }
+  :host .board {
+    -webkit-perspective: 1000;
+            perspective: 1000; }
+  :host p {
+    margin-left: 10px; }
+
+#replay::shadow #ripple {
+  color: blue; }

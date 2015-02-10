@@ -1,0 +1,7 @@
+:host {
+  display: block;
+  background: #FFF;
+  padding: 40px; }
+  :host ::content img {
+    display: block;
+    margin: 0 auto; }

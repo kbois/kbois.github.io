@@ -1,0 +1,131 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/core-overlay/core-overlay.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../game-service/game-service.html">
+<link rel="import" href="../game-card/game-card.html">
+<link rel="import" href="../game-overlay/game-overlay.html">
+
+
+
+<polymer-element name="game-playground" attributes="">
+  <template>
+    <link rel="stylesheet" href="game-playground.css">
+
+    <game-service id="service" cards="{{cards}}"></game-service>
+      
+      <div id="board" class="board" horizontal layout wrap center-justified>
+        <template repeat="{{card in cards}}">
+          <game-card imgSrc="{{card.image}}" name="{{card.name}}" on-tap="{{onTap}}"></game-card>
+        </template>
+      </div>
+      <p>Nombre de coups : {{moves}}</p>
+      <game-overlay id="gameOverlay">
+        <img src="{{medal}}">
+        <h1>Bravo, vous avez gagné en {{moves}} coups!</h1>
+        <h2>{{victoryMessage}}</h2>
+        <div horizontal layout end-justified>
+          <paper-button id="replay" raised on-tap="{{restartGame}}">Rejouer</paper-button>
+        </div>
+      </game-overlay>
+
+  </template>
+  <script>
+    (function () {
+      /* L'élément playground contient toute la logique du jeu */
+      Polymer({
+        counter: 0,
+        numberOfPairsFound: 0,
+        moves: 0, //Le nombre de coups qu'un joueur utilise dans une partie
+        pairs: 5, //Le nombre de paires à trouver
+        pairOfCards: [],
+        victoryMessage: null,
+
+        ready: function() {
+        },
+
+        onTap: function(event, detail, sender) {
+          var card = event.target;
+
+          //On ne choisi pas une carte déjà retournée
+          if(!card.flipped) {
+            this.counter++;
+            if(this.counter <= 2) {
+              card.flipCard();
+              this.pickACard(card);
+            }
+          }
+        },
+
+        /**
+         * Fonction qui ajoute une carte à la selection du joueur
+         * @param  {Object} selectedCard
+         * @return void
+         */
+        pickACard: function(selectedCard) {
+          this.pairOfCards.push(selectedCard);
+          if(this.counter === 2) {
+            this.checkSelectedCards();
+          }
+        },
+
+        /**
+         * Fonction qui vérifie si les deux cartes choisies sont égales
+         * @return void
+         */
+        checkSelectedCards: function() {
+          this.moves++;
+          if(this.pairOfCards[0].name === this.pairOfCards[1].name) {
+            // 2 carte egales
+            this.numberOfPairsFound++;
+            this.checkVictory();
+          }
+          else {
+            // Si le joueur prend 2 cartes non identiques, on les laisse affichées 2 secondes
+            this.async(function() {
+              this.pairOfCards[0].flipCard();
+              this.pairOfCards[1].flipCard();
+              this.checkVictory();
+            }, null, 2000);
+          }
+        },
+
+        checkVictory: function() {
+          this.counter = 0;
+          this.pairOfCards.length = 0; // On vide la selection
+
+          if(this.numberOfPairsFound === this.pairs) {
+            this.setReward();
+            this.$.gameOverlay.toggle();
+          }
+        },
+
+        setReward: function() {
+          if(this.moves >= 10) {
+            this.victoryMessage = "Vous obtenez la médaille de bronze !";
+            this.medal = '../../images/bronze-medal.png';
+          } else if(this.moves >=8) {
+            this.victoryMessage = "Vous obtenez la médaille d'argent !"
+            this.medal = '../../images/silver-medal.png';
+          } else {
+            this.victoryMessage = "Vous obtenez la médaille d'or !"
+            this.medal = '../../images/golden-medal.png';
+          }
+        },
+
+        restartGame: function() {
+          this.numberOfPairsFound = 0;
+          this.moves = 0;
+          var cardsElements = Array.prototype.slice.call(this.$.board.querySelectorAll('game-card'),0);
+          cardsElements.forEach(function(el) {
+            el.flipCard();
+          });
+          this.async(function() {
+            this.$.service.shuffle(this.cards);
+            this.$.gameOverlay.toggle();
+          }, null, 1000);
+        }
+
+      });
+    })();
+  </script>
+</polymer-element>

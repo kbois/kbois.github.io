@@ -1,0 +1,28 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/core-overlay/core-overlay.html">
+
+
+<polymer-element name="game-overlay" attributes="">
+  <template>
+    <link rel="stylesheet" href="game-overlay.css">
+    <core-overlay id="overlay" autoCloseDisabled layered backdrop>
+      <content select="img"></content>
+      <content select="h1"></content>
+      <content select="h2"></content>
+      <content></content>
+    </core-overlay>
+  </template>
+  <script>
+    (function () {
+      Polymer({
+        // define element prototype here
+        ready: function() {
+          this.$.overlay.target = this;
+        },
+        toggle: function() {
+          this.$.overlay.toggle();
+        }
+      });
+    })();
+  </script>
+</polymer-element>

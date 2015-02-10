@@ -1,0 +1,34 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<polymer-element name="game-card" attributes="flipped name imgSrc">
+  <template>
+    <link rel="stylesheet" href="game-card.css">
+    <div class="front">
+      <img src="{{imgSrc}}">
+    </div>
+    <div class="back">
+    </div>
+  </template>
+  <script>
+    (function () {
+      Polymer({
+        name: 'toto', //"valeur" d'une carte
+        flipped: false,
+        imgSrc: null,
+
+        flipCard: function() {
+          this.flipped = !this.flipped;
+        },
+
+        flippedChanged: function() {
+          if(this.flipped) {
+            this.setAttribute('class', 'flipped');
+          }
+          else {
+            this.removeAttribute('class');
+          }
+        }
+      });
+    })();
+  </script>
+</polymer-element>
